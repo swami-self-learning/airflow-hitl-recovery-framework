@@ -1,0 +1,61 @@
+framework_version: "1.0"
+
+team:
+  id: customer
+  name: Customer Data Engineering
+  owner: customer-data-team
+
+dag:
+  dag_id: pipeline_recovery_customer
+  description: Configuration-driven recovery workflow for Customer pipelines
+  schedule: null
+  tags:
+    - hackathon
+    - hitl
+    - pipeline-recovery
+    - customer
+
+pipeline:
+  name: customer_profile_ingestion
+
+  steps:
+    - check_source_file
+    - ingest_customer_profile
+    - publish_customer_dataset
+
+  simulation:
+    outcome: failed
+    failed_step: check_source_file
+    error_code: FILE_NOT_FOUND
+    error_message: Expected customer profile file was not found
+
+  business_impact: Customer analytics dashboard may be delayed
+  sla_minutes_remaining: 60
+
+kedb:
+  type: local_json
+  location: /opt/airflow/kedb/customer_kedb.json
+
+hitl:
+  subject: Customer pipeline recovery decision
+  title: Customer pipeline execution requires human review
+
+  actions:
+    - task_id: apply_fix
+      label: Wait for the source file and rerun ingestion
+
+    - task_id: create_incident
+      label: Create an incident for the source team
+
+    - task_id: manual_investigation
+      label: Request manual investigation from Customer Data Engineering
+
+remediation:
+  action: wait_for_source_file
+  rerun_outcome: success
+
+incident:
+  enabled: true
+  provider: mock
+  assignment_group: CUSTOMER-DATA-SUPPORT
+  priority: P3

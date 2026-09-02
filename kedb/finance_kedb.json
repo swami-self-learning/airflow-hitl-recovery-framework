@@ -1,0 +1,10 @@
+{
+  "DB_CONNECTION_TIMEOUT": {
+    "known_error": true,
+    "category": "Database Connectivity",
+    "probable_cause": "Temporary database or network connectivity issue",
+    "recommended_fix": "Reset the database connection pool and rerun the failed pipeline",
+    "risk_level": "Low",
+    "historical_success_rate": 92
+  }
+}

@@ -1,0 +1,61 @@
+framework_version: "1.0"
+
+team:
+  id: finance
+  name: Finance Data Engineering
+  owner: finance-data-team
+
+dag:
+  dag_id: pipeline_recovery_finance
+  description: Configuration-driven recovery workflow for Finance pipelines
+  schedule: null
+  tags:
+    - hackathon
+    - hitl
+    - pipeline-recovery
+    - finance
+
+pipeline:
+  name: finance_daily_reconciliation
+
+  steps:
+    - extract_finance_transactions
+    - validate_finance_transactions
+    - load_finance_reconciliation
+
+  simulation:
+    outcome: failed
+    failed_step: load_finance_reconciliation
+    error_code: DB_CONNECTION_TIMEOUT
+    error_message: Database connection timed out after 30 seconds
+
+  business_impact: Daily financial reconciliation may be delayed
+  sla_minutes_remaining: 30
+
+kedb:
+  type: local_json
+  location: /opt/airflow/kedb/finance_kedb.json
+
+hitl:
+  subject: Finance pipeline recovery decision
+  title: Finance pipeline execution requires human review
+
+  actions:
+    - task_id: apply_fix
+      label: Apply the KEDB fix and rerun the pipeline
+
+    - task_id: create_incident
+      label: Create an incident for Finance Data Support
+
+    - task_id: manual_investigation
+      label: Stop automation and request manual investigation
+
+remediation:
+  action: reset_connection
+  rerun_outcome: success
+
+incident:
+  enabled: true
+  provider: mock
+  assignment_group: FINANCE-DATA-SUPPORT
+  priority: P2

@@ -1,0 +1,10 @@
+{
+  "FILE_NOT_FOUND": {
+    "known_error": true,
+    "category": "Upstream Dependency",
+    "probable_cause": "The expected upstream source file has not arrived",
+    "recommended_fix": "Wait for the expected source file and rerun the ingestion pipeline",
+    "risk_level": "Medium",
+    "historical_success_rate": 84
+  }
+}

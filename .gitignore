@@ -1,0 +1,30 @@
+# Airflow runtime files
+logs/
+config/airflow.cfg
+config/*.json.generated
+
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
+venv/
+airflow-env/
+
+# Environment and secrets
+.env
+*.env
+secrets/
+*.pem
+*.key
+
+# IDE
+.vscode/
+.idea/
+
+# macOS
+.DS_Store
+
+# Temporary files
+*.tmp
+*.swp

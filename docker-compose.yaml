@@ -1,0 +1,23 @@
+services:
+  airflow:
+    build:
+      context: .
+      dockerfile: Dockerfile
+
+    container_name: airflow-hitl-framework
+
+    ports:
+      - "8080:8080"
+
+    volumes:
+      - ./dags:/opt/airflow/dags
+      - ./team-configs:/opt/airflow/team-configs:ro
+      - ./kedb:/opt/airflow/kedb:ro
+      - ./logs:/opt/airflow/logs
+      - ./plugins:/opt/airflow/plugins
+
+    environment:
+      AIRFLOW__CORE__EXECUTOR: LocalExecutor
+      AIRFLOW__CORE__LOAD_EXAMPLES: "False"
+
+    command: standalone

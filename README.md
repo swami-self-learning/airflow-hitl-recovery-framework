@@ -8,6 +8,27 @@ Teams onboard by providing a YAML configuration. The framework automatically gen
 
 **Keep a Human in the Loop**
 
+## Architecture
+
+```text
+Team Configuration
+        ↓
+Dynamic DAG Generation
+        ↓
+Execute Pipeline
+        ↓
+Success / Failure
+      ↙         ↘
+     ↓           ↓
+ Complete     KEDB Lookup
+                   ↓
+             Human Decision
+          ┌────┼──────┐
+          ↓    ↓      ↓
+     Apply Fix Incident Investigation
+          ↓
+     Recovery Complete
+
 ## What It Does
 
 The framework executes a pipeline, detects failed outcomes, searches a team-specific Known Error Database (KEDB), and pauses for human decision-making before proceeding.
@@ -29,20 +50,3 @@ Manual Investigation uses Airflow's HITLEntryOperator to capture investigation f
 5. A human chooses how recovery should proceed.
 6. Airflow executes the selected recovery path.
 
-## Architecture
-
-```text
-Team Configuration
-        ↓
-Dynamic DAG Generation
-        ↓
-Execute Pipeline
-        ↓
-Success / Failure
-        ↓
-KEDB Lookup
-        ↓
-Human Decision
-    ┌────┼────┐
-    ↓    ↓    ↓
- Fix  Incident Investigation
